@@ -188,9 +188,8 @@ public class MyConceptVisionColorLocator_Circle extends LinearOpMode {
             telemetry.addData("preview on/off", "... Camera Stream\n");
 
             // Read the current list
-            List<ColorBlobLocatorProcessor.Blob> blobsPurple = purpleLocator.getBlobs();
-
-            List<ColorBlobLocatorProcessor.Blob> blobsGreen = greenLocator.getBlobs();
+            List<ColorBlobLocatorProcessor.Blob> colorBlobs = purpleLocator.getBlobs();
+            colorBlobs.addAll(greenLocator.getBlobs());
 
             /*
              * The list of Blobs can be filtered to remove unwanted Blobs.
@@ -227,17 +226,10 @@ public class MyConceptVisionColorLocator_Circle extends LinearOpMode {
              */
             ColorBlobLocatorProcessor.Util.filterByCriteria(
                     ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
-                    50, 20000, blobsPurple);  // filter out very small blobs.
-            ColorBlobLocatorProcessor.Util.filterByCriteria(
-                    ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
-                    50, 20000, blobsGreen);  // filter out very small blobs.
-
+                    50, 20000, colorBlobs);  // filter out very small blobs
             ColorBlobLocatorProcessor.Util.filterByCriteria(
                     ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
-                    0.6, 1, blobsPurple);
-            ColorBlobLocatorProcessor.Util.filterByCriteria(
-                    ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
-                    0.6, 1, blobsGreen);
+                    0.6, 1, colorBlobs);
 
             /* filter out non-circular blobs.
              * NOTE: You may want to adjust the minimum value depending on your use case.
@@ -258,13 +250,12 @@ public class MyConceptVisionColorLocator_Circle extends LinearOpMode {
             telemetry.addLine("Circularity Radius Center");
 
             // Display the Blob's circularity, and the size (radius) and center location of its circleFit.
-            for (ColorBlobLocatorProcessor.Blob b : blobsPurple) {
-                for (ColorBlobLocatorProcessor.Blob c : blobsGreen) {
+            for (ColorBlobLocatorProcessor.Blob b : colorBlobs) {
 
                     Circle circleFit = b.getCircle();
                     telemetry.addLine(String.format("%5.3f      %3d     (%3d,%3d)",
                             b.getCircularity(), (int) circleFit.getRadius(), (int) circleFit.getX(), (int) circleFit.getY()));
-                }}
+                }
 
             telemetry.update();
             sleep(100); // Match the telemetry update interval.

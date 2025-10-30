@@ -47,30 +47,30 @@ public class TestDrive extends OpMode {
         }*/
 
         if(gamepad2.a) {
-            hw.FLdrive().setPower(1);
+            hw.FLdrive.setPower(1);
         }
         else{
-            hw.FLdrive().setPower(0);
+            hw.FLdrive.setPower(0);
         }
 
         if(gamepad2.b) {
-            hw.FRdrive().setPower(1);
+            hw.FRdrive.setPower(1);
         }
         else{
-            hw.FRdrive().setPower(0);
+            hw.FRdrive.setPower(0);
         }
         if(gamepad2.x) {
-            hw.BLdrive().setPower(1);
+            hw.BLdrive.setPower(1);
         }
         else{
-            hw.BLdrive().setPower(0);
+            hw.BLdrive.setPower(0);
         }
 
         if(gamepad2.y) {
-            hw.BRdrive().setPower(1);
+            hw.BRdrive.setPower(1);
         }
         else{
-            hw.BRdrive().setPower(0);
+            hw.BRdrive.setPower(0);
         }
 
         //telemetry.addData("Lift data:", hw.Lift().getCurrentPosition());

@@ -3,25 +3,25 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class HardwareSoftware {
 
     private HardwareMap hw = null;
 
-    DcMotorEx FRdrive    = null;
-    DcMotorEx BRdrive     = null;
-    DcMotorEx BLdrive      = null;
-    DcMotorEx FLdrive     = null;
-/*    DcMotorEx Arm = null;
-    DcMotorEx Lift = null;
-    DcMotorEx Shoulder = null;
-    Servo Wrist = null;
-    Servo Claw = null;
-    Servo Bucket = null;*/
+    public DcMotorEx FRdrive = null;
+    public DcMotorEx BRdrive = null;
+    public DcMotorEx BLdrive = null;
+    public DcMotorEx FLdrive = null;
+    public DcMotorEx Intake = null;
+    public DcMotorEx FlywheelL = null;
+    public DcMotorEx FlywheelR = null;
+    public Servo Angler = null;
 
 
-    public void init(HardwareMap ahw){
+    public void init(HardwareMap ahw) {
 
 
         hw = ahw;
@@ -30,17 +30,20 @@ public class HardwareSoftware {
         FRdrive = hw.get(DcMotorEx.class, "FRdrive");
         BLdrive = hw.get(DcMotorEx.class, "BLdrive");
         BRdrive = hw.get(DcMotorEx.class, "BRdrive");
+        Intake = hw.get(DcMotorEx.class, "Intake");
+        FlywheelL = hw.get(DcMotorEx.class, "FlywheelL");
+        FlywheelR = hw.get(DcMotorEx.class, "FlywheelR");
+        Angler = hw.get(Servo.class, "Angler");
 
 
-     //   Arm = hw.get(DcMotorEx.class, "Arm");
-    //    Lift = hw.get(DcMotorEx.class, "Lift");
+        //   Arm = hw.get(DcMotorEx.class, "Arm");
+        //    Lift = hw.get(DcMotorEx.class, "Lift");
         //    Shoulder = hw.get(DcMotorEx.class, "Shoulder");
 
 
-    //    Wrist = hw.get(Servo.class, "Wrist");
-    //    Claw = hw.get(Servo.class, "Claw");
-    //    Bucket = hw.get(Servo.class, "Bucket");
-
+        //    Wrist = hw.get(Servo.class, "Wrist");
+        //    Claw = hw.get(Servo.class, "Claw");
+        //    Bucket = hw.get(Servo.class, "Bucket");
 
 
         FLdrive.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -65,59 +68,18 @@ public class HardwareSoftware {
         FRdrive.setDirection(DcMotorEx.Direction.FORWARD);
         BLdrive.setDirection(DcMotorEx.Direction.REVERSE);
         BRdrive.setDirection(DcMotorEx.Direction.FORWARD);
-       /* Arm.setDirection(DcMotorSimple.Direction.REVERSE);*/
+        /* Arm.setDirection(DcMotorSimple.Direction.REVERSE);*/
 
         FLdrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BRdrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FRdrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BLdrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-     /*   Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Shoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-*/
-
+        Intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FlywheelL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FlywheelR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
     }
-
-    public DcMotorEx FLdrive(){
-        return FLdrive;
-    }
-
-    public DcMotorEx FRdrive(){
-        return FRdrive;
-    }
-
-    public DcMotorEx BLdrive(){
-        return BLdrive;
-    }
-
-    public DcMotorEx BRdrive(){
-        return BRdrive;
-    }
-
-    /*public DcMotorEx Arm(){
-        return Arm;
-    }
-
-    public DcMotorEx Lift(){
-        return Lift;
-    }
-
-    public DcMotorEx Shoulder(){
-        return Shoulder;
-    }
-
-    public Servo Claw(){
-        return Claw;
-    }
-
-    public Servo Wrist(){
-        return Wrist;
-    }
-
-    public Servo Bucket(){return Bucket;};
-*/
 
 
 }
