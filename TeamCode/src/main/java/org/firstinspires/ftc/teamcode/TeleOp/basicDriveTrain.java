@@ -24,10 +24,11 @@ public class basicDriveTrain extends OpMode {
 
     double x = 0;
 
-    //TODO: 1. Test direction of flywheels
-    //      2. Test intake direction
-    //      3. Program servo to go to set positions
+    //TODO: 1. Test direction of flywheels done done done run run we run the town
+    //      2. Test intake direction done done done i dont talk but i bite full of venom
+    //      3. test da set positions
     //      4. Find 2 set positions for launching 1. near and 2. far
+    //      5. Test odometrey sensor
 
     @Override
     public void loop() {
@@ -43,35 +44,38 @@ public class basicDriveTrain extends OpMode {
         hw.FRdrive.setPower(-(y + rx + x));
         hw.BLdrive.setPower(-(y - rx + x));
         hw.BRdrive.setPower(-(y + rx - x));
-
-        if(gamepad1.a){
+// release ball
+        if(gamepad1.b){
             hw.Intake.setPower(.97);
         }
-            else if(gamepad1.b){
+// pickup ball
+            else if(gamepad1.a){
                 hw.Intake.setPower(-.97);
             }
             else {
                 hw.Intake.setPower(0);
             }
         if(gamepad1.x){
-            hw.FlywheelL.setPower(.97);
-            hw.FlywheelR.setPower(-.97);
+            hw.FlywheelL.setPower(.80);
+            hw.FlywheelR.setPower(-.80);
         }
             else {
                 hw.FlywheelL.setPower(0);
                 hw.FlywheelR.setPower(0);
             }
+
+
         if(gamepad2.x){
-            hw.Angler.setPosition(.54);
+            hw.Angler.setPosition(.58);
         }
         if(gamepad2.y){
             hw.Angler.setPosition(.56);
         }
         if(gamepad2.a){
-            hw.Angler.setPosition(.5);
+            hw.Angler.setPosition(.59);
         }
         if(gamepad2.b){
-            hw.Angler.setPosition(.52);
+            hw.Angler.setPosition(.57);
         }
         //telemetry.addData("Shoulder Pos", hw.Shoulder().getCurrentPosition());
 
