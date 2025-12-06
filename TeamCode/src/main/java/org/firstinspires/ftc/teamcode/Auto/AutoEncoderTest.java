@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode.Auto;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -42,7 +44,7 @@ import org.firstinspires.ftc.teamcode.HardwareSoftware;
  * The code is structured as a LinearOpMode
  *
  * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: RobotAutoDriveByTime;
+ *   otherwise you would use: hwAutoDriveByTime;
  *
  *  This code ALSO requires that the drive Motors have been configured such that a positive
  *  power command moves them forward, and causes the encoders to count UP.
@@ -63,10 +65,10 @@ import org.firstinspires.ftc.teamcode.HardwareSoftware;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Robot: Auto Drive", group="Robot")
+@Autonomous(name="hw: Auto Drive", group="hw")
 
 public class AutoEncoderTest extends LinearOpMode {
-  //  HardwareSoftware hw = new HardwareSoftware();
+    //  HardwareSoftware hw = new HardwareSoftware();
 
     /* Declare OpMode members. */
     private DcMotor         FLdrive   = null;
@@ -82,7 +84,7 @@ public class AutoEncoderTest extends LinearOpMode {
     // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
     // This is gearing DOWN for less speed and more torque.
     // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
-    static final double     COUNTS_PER_INCH    = 2000 ;    // eg: TETRIX Motor Encoder
+    static final double     COUNTS_PER_INCH    = 40 ;    // eg: TETRIX Motor Encoder
 
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
@@ -95,10 +97,10 @@ public class AutoEncoderTest extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at",  "%7d :%7d",
-                          hw.FLdrive.getCurrentPosition(),
-                          hw.BLdrive.getCurrentPosition(),
-                          hw.FRdrive.getCurrentPosition(),
-                          hw.BRdrive.getCurrentPosition());
+                hw.FLdrive.getCurrentPosition(),
+                hw.BLdrive.getCurrentPosition(),
+                hw.FRdrive.getCurrentPosition(),
+                hw.BRdrive.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses START)
@@ -106,8 +108,42 @@ public class AutoEncoderTest extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  1,  1, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-      //  encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED,  47,  47, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        // angling launcher and turn it on
+        hw.Angler.setPosition(hw.AnglerFar);
+        // Ball 1 launching
+        hw.FlywheelL.setVelocity(hw.TPS * 2600);
+        hw.FlywheelR.setVelocity(hw.TPS * -2600);
+        // Flappers push into fly wheel
+        hw.Flapper.setPosition(hw.FlapperClosed);
+        sleep(1000);
+        hw.Flapper.setPosition(hw.FlapperEnter);
+        // Ball 2 going through gate
+        hw.LeftGate.setPosition(hw.openLGate);
+        hw.Intake.setPower(-.97);
+        sleep(3000);
+        hw.LeftGate.setPosition(hw.closeLGate);
+        // Ball 2 launching
+        // Flappers push into fly wheel
+        hw.Flapper.setPosition(hw.FlapperClosed);
+        sleep(1000);
+        hw.Flapper.setPosition(hw.FlapperEnter);
+        // Ball 3 going through gate
+        hw.RightGate.setPosition(hw.openRGate);
+        sleep(3000);
+        hw.RightGate.setPosition(hw.closeRGate);
+        // Ball 3 launching
+        // Flappers push into fly wheel
+        hw.Flapper.setPosition(hw.FlapperClosed);
+        sleep(1000);
+        hw.Flapper.setPosition(hw.FlapperEnter);
+        // Robot Sleep
+        sleep(1000);
+        hw.Intake.setPower(0);
+        hw.FlywheelL.setVelocity(0);
+        hw.FlywheelR.setVelocity(0);
+        encoderDrive(DRIVE_SPEED, driveRight(50), 50);
+        //  encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
         telemetry.addData("Path", "Complete");
@@ -157,20 +193,20 @@ public class AutoEncoderTest extends LinearOpMode {
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // its target position, the motion will stop.  This is "safer" in the event that the hw will
             // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // However, if you require that BOTH motors have finished their moves before the hw continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (hw.FLdrive.isBusy() && hw.FRdrive.isBusy()) &&
-                   (hw.BLdrive.isBusy() && hw.BRdrive.isBusy())) {
+                    (runtime.seconds() < timeoutS) &&
+                    (hw.FLdrive.isBusy() && hw.FRdrive.isBusy()) &&
+                    (hw.BLdrive.isBusy() && hw.BRdrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Currently at",  " at %7d :%7d",
-                                            hw.FLdrive.getCurrentPosition(), hw.FRdrive.getCurrentPosition(),
-                                            hw.BLdrive.getCurrentPosition(), hw.BRdrive.getCurrentPosition());
+                        hw.FLdrive.getCurrentPosition(), hw.FRdrive.getCurrentPosition(),
+                        hw.BLdrive.getCurrentPosition(), hw.BRdrive.getCurrentPosition());
 
 
                 telemetry.update();
@@ -190,5 +226,99 @@ public class AutoEncoderTest extends LinearOpMode {
 
             sleep(250);   // optional pause after each move.
         }
+    }
+
+    public void encoderDrive(double speed,
+                             double[] inches,
+                             double timeoutS) {
+        int newFLeftTarget;
+        int newFRightTarget;
+        int newBRightTarget;
+        int newBLeftTarget;
+
+        // Ensure that the OpMode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newFLeftTarget = hw.FLdrive.getCurrentPosition() + (int) (inches[0] * COUNTS_PER_INCH);
+            newFRightTarget = hw.FRdrive.getCurrentPosition() + (int) (inches[1] * COUNTS_PER_INCH);
+            newBLeftTarget = hw.BLdrive.getCurrentPosition() + (int) (inches[2] * COUNTS_PER_INCH);
+            newBRightTarget = hw.BRdrive.getCurrentPosition() + (int) (inches[3] * COUNTS_PER_INCH);
+
+            hw.FLdrive.setTargetPosition(newFLeftTarget);
+            hw.FRdrive.setTargetPosition(newFRightTarget);
+            hw.BLdrive.setTargetPosition(newBLeftTarget);
+            hw.BRdrive.setTargetPosition(newBRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            hw.BLdrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            hw.BRdrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            hw.FLdrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            hw.FRdrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            hw.FLdrive.setPower(Math.abs(speed));
+            hw.FRdrive.setPower(Math.abs(speed));
+            hw.BLdrive.setPower(Math.abs(speed));
+            hw.BRdrive.setPower(Math.abs(speed));
+
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the hw will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the hw continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (hw.FLdrive.isBusy() && hw.FRdrive.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Running to", " %7d :%7d", newFLeftTarget, newFRightTarget);
+                telemetry.addData("Currently at", " at %7d :%7d",
+                        hw.FLdrive.getCurrentPosition(), hw.FRdrive.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            hw.BRdrive.setPower(0);
+            hw.FRdrive.setPower(0);
+            hw.FLdrive.setPower(0);
+            hw.BLdrive.setPower(0);
+
+
+            // Turn off RUN_TO_POSITION
+            hw.FLdrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hw.FRdrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hw.BRdrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hw.BLdrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            sleep(250);   // optional pause after each move.
+        }
+    }
+    public double[] driveLeft(double inches) {
+        return new double[]{-inches, inches, inches, -inches};
+    }
+
+    public double[] driveRight(double inches) {
+        return new double[]{inches, -inches, -inches, inches};
+    }
+
+
+    public double[] driveForward(double inches) {
+        return new double[]{inches, inches, inches, inches};
+    }
+
+    public double[] driveBackward(double inches) {
+        return new double[]{-inches, -inches, -inches, -inches};
+    }
+
+    public double[] turnRight(double inches) {
+        return new double[]{inches, -inches, -inches, inches};
+    }
+
+    public double[] turnLeft(double inches) {
+        return new double[]{-inches, inches, inches, -inches};
     }
 }

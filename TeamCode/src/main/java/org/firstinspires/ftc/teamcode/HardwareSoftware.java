@@ -19,7 +19,21 @@ public class HardwareSoftware {
     public DcMotorEx FlywheelL = null;
     public DcMotorEx FlywheelR = null;
     public Servo Angler = null;
+    public Servo RightGate = null;
+    public Servo LeftGate = null;
+    public Servo Flapper = null;
 
+
+
+    public double openLGate = 0.39;
+    public double openRGate = 0.59;
+    public double closeLGate = 0.57;
+    public double closeRGate = 0.45;
+    public double AnglerOpen = 0.5;
+    public double AnglerFar = 0.375;
+    public double TPS = 0.6;
+    public double FlapperEnter = 0.8;
+    public double FlapperClosed = 0;
 
     public void init(HardwareMap ahw) {
 
@@ -34,7 +48,9 @@ public class HardwareSoftware {
         FlywheelL = hw.get(DcMotorEx.class, "FlywheelL");
         FlywheelR = hw.get(DcMotorEx.class, "FlywheelR");
         Angler = hw.get(Servo.class, "Angler");
-
+        RightGate = hw.get(Servo.class, "RightGate");
+        LeftGate = hw.get(Servo.class, "LeftGate");
+        Flapper = hw.get(Servo.class, "Flapper");
 
         //   Arm = hw.get(DcMotorEx.class, "Arm");
         //    Lift = hw.get(DcMotorEx.class, "Lift");

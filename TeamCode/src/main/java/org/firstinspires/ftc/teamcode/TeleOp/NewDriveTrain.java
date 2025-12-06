@@ -1,14 +1,13 @@
 
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-import static java.lang.Thread.sleep;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.HardwareSoftware;
-@TeleOp(name="Drive")
-public class basicDriveTrain extends OpMode {
+
+@TeleOp(name="New Drive")
+public class NewDriveTrain extends OpMode {
 
     HardwareSoftware hw = new HardwareSoftware();
     @Override
@@ -55,27 +54,55 @@ public class basicDriveTrain extends OpMode {
         else {
             hw.Intake.setPower(0);
         }
-        if(gamepad1.x){
-            hw.FlywheelL.setPower(.80);
-            hw.FlywheelR.setPower(-.80);
+// fly wheel fast speed, needs to be tested
+        if(gamepad2.right_trigger > .5){
+            hw.FlywheelL.setVelocity(hw.TPS * 3250);
+            hw.FlywheelR.setVelocity(hw.TPS * -3250);
+        }
+// fly wheel slow speed, needs to be tested
+        else if(gamepad2.left_trigger > .5){
+            hw.FlywheelL.setVelocity(hw.TPS * 2600);
+            hw.FlywheelR.setVelocity(hw.TPS * -2600);
         }
         else {
-            hw.FlywheelL.setPower(0);
-            hw.FlywheelR.setPower(0);
+            hw.FlywheelL.setVelocity(0);
+            hw.FlywheelR.setVelocity(0);
         }
 
 //0.39, 0.5,
-        if(gamepad2.x){
-            hw.Angler.setPosition(.58);
-        }
-        if(gamepad2.y){
-            hw.Angler.setPosition(.56);
-        }
+//        if(gamepad2.x){
+//            hw.Angler.setPosition(.58);
+//        }
+//        if(gamepad2.y){
+//            hw.Angler.setPosition(.56);
+//        }
+// fly wheel open button, needs to be tested
         if(gamepad2.a){
-            hw.Angler.setPosition(.59);
+            hw.Angler.setPosition(hw.AnglerOpen);
         }
+// fly wheel close button (far away), needs to be tested
         if(gamepad2.b){
-            hw.Angler.setPosition(.57);
+            hw.Angler.setPosition(hw.AnglerFar);
+        }
+// right and left gates
+        if(gamepad1.right_bumper){
+            hw.RightGate.setPosition(hw.openRGate);
+        }
+        else {
+            hw.RightGate.setPosition(hw.closeRGate);
+        }
+        if(gamepad1.left_bumper){
+            hw.LeftGate.setPosition(hw.openLGate);
+        }
+        else {
+            hw.LeftGate.setPosition(hw.closeLGate);
+        }
+// flapper to get ball to fly wheel, no values were set
+        if(gamepad2.right_bumper){
+            hw.Flapper.setPosition(hw.FlapperClosed);
+        }
+        else {
+            hw.Flapper.setPosition(hw.FlapperEnter);
         }
         //telemetry.addData("Shoulder Pos", hw.Shoulder().getCurrentPosition());
 
