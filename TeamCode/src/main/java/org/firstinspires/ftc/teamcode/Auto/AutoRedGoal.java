@@ -29,10 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Auto;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -65,9 +62,9 @@ import org.firstinspires.ftc.teamcode.HardwareSoftware;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="hw: Auto Drive", group="hw")
+@Autonomous(name="hw: Auto Red Drive", group="hw")
 
-public class AutoEncoderTest extends LinearOpMode {
+public class AutoRedGoal extends LinearOpMode {
     //  HardwareSoftware hw = new HardwareSoftware();
 
     /* Declare OpMode members. */
@@ -108,33 +105,49 @@ public class AutoEncoderTest extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        hw.LeftGate.setPosition(hw.closeLGate);
+        hw.RightGate.setPosition(hw.closeRGate);
         encoderDrive(DRIVE_SPEED,  47,  47, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         // angling launcher and turn it on
         hw.Angler.setPosition(hw.AnglerFar);
-        // Ball 1 launching
+        // Start Fly Wheels
         hw.FlywheelL.setVelocity(hw.TPS * 2600);
-        hw.FlywheelR.setVelocity(hw.TPS * -2600);
+        hw.FlywheelR.setVelocity(hw.TPS * 2600);
+        sleep(1000);
         // Flappers push into fly wheel
-        hw.Flapper.setPosition(hw.FlapperClosed);
+        hw.Flapper.setPosition(hw.FlapperStart);
+        sleep(1000);
+        // Ball 1 Launch
+        hw.Flapper.setPosition(hw.FlapperLaunch);
         sleep(1000);
         hw.Flapper.setPosition(hw.FlapperEnter);
         // Ball 2 going through gate
         hw.LeftGate.setPosition(hw.openLGate);
+        sleep(500);
         hw.Intake.setPower(-.97);
         sleep(3000);
         hw.LeftGate.setPosition(hw.closeLGate);
-        // Ball 2 launching
+        hw.Intake.setPower(0);
+        sleep(1000);
         // Flappers push into fly wheel
-        hw.Flapper.setPosition(hw.FlapperClosed);
+        hw.Flapper.setPosition(hw.FlapperStart);
+        sleep(1000);
+        // Ball 2 Launch
+        hw.Flapper.setPosition(hw.FlapperLaunch);
         sleep(1000);
         hw.Flapper.setPosition(hw.FlapperEnter);
         // Ball 3 going through gate
         hw.RightGate.setPosition(hw.openRGate);
+        sleep(500);
+        hw.Intake.setPower(-.97);
         sleep(3000);
         hw.RightGate.setPosition(hw.closeRGate);
-        // Ball 3 launching
+        sleep(1000);
         // Flappers push into fly wheel
-        hw.Flapper.setPosition(hw.FlapperClosed);
+        hw.Flapper.setPosition(hw.FlapperStart);
+        sleep(1000);
+        // Ball 3 Launch
+        hw.Flapper.setPosition(hw.FlapperLaunch);
         sleep(1000);
         hw.Flapper.setPosition(hw.FlapperEnter);
         // Robot Sleep
@@ -142,7 +155,7 @@ public class AutoEncoderTest extends LinearOpMode {
         hw.Intake.setPower(0);
         hw.FlywheelL.setVelocity(0);
         hw.FlywheelR.setVelocity(0);
-        encoderDrive(DRIVE_SPEED, driveRight(50), 50);
+        encoderDrive(DRIVE_SPEED, driveLeft(50), 50);
         //  encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 

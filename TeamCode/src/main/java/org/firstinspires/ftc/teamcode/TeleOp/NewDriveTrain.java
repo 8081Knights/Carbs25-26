@@ -56,13 +56,13 @@ public class NewDriveTrain extends OpMode {
         }
 // fly wheel fast speed, needs to be tested
         if(gamepad2.right_trigger > .5){
-            hw.FlywheelL.setVelocity(hw.TPS * 3250);
-            hw.FlywheelR.setVelocity(hw.TPS * -3250);
+            hw.FlywheelL.setVelocity(hw.TPS * hw.FlywheelFast);
+            hw.FlywheelR.setVelocity(hw.TPS * hw.FlywheelFast);
         }
 // fly wheel slow speed, needs to be tested
         else if(gamepad2.left_trigger > .5){
-            hw.FlywheelL.setVelocity(hw.TPS * 2600);
-            hw.FlywheelR.setVelocity(hw.TPS * -2600);
+            hw.FlywheelL.setVelocity(hw.TPS * hw.FlywheelSlow);
+            hw.FlywheelR.setVelocity(hw.TPS * hw.FlywheelSlow);
         }
         else {
             hw.FlywheelL.setVelocity(0);
@@ -97,10 +97,12 @@ public class NewDriveTrain extends OpMode {
         else {
             hw.LeftGate.setPosition(hw.closeLGate);
         }
-// flapper to get ball to fly wheel, no values were set
-        if(gamepad2.right_bumper){
-            hw.Flapper.setPosition(hw.FlapperClosed);
-        }
+// flapper to get ball to fly wheel
+        if(gamepad2.left_bumper){   //to slightly push the ball forward
+            hw.Flapper.setPosition(hw.FlapperStart);
+            if(gamepad2.right_bumper){  ////tpush the ball to launch
+                hw.Flapper.setPosition(hw.FlapperLaunch);
+        }}
         else {
             hw.Flapper.setPosition(hw.FlapperEnter);
         }

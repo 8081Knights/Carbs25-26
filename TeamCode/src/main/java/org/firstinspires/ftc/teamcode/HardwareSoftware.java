@@ -27,13 +27,21 @@ public class HardwareSoftware {
 
     public double openLGate = 0.39;
     public double openRGate = 0.59;
-    public double closeLGate = 0.57;
+    public double closeLGate = 0.56;
+    //.57 to far to the right
+    //.51 to far to the left
     public double closeRGate = 0.45;
     public double AnglerOpen = 0.5;
     public double AnglerFar = 0.375;
     public double TPS = 0.6;
     public double FlapperEnter = 0.8;
-    public double FlapperClosed = 0;
+    public double FlapperStart = .55;
+    public double FlywheelFast = 3300;
+    public double FlywheelSlow = 2600;
+
+    //.69 not high enough
+
+    public double FlapperLaunch = 0;
 
     public void init(HardwareMap ahw) {
 
@@ -83,7 +91,8 @@ public class HardwareSoftware {
         FLdrive.setDirection(DcMotorEx.Direction.REVERSE);
         FRdrive.setDirection(DcMotorEx.Direction.FORWARD);
         BLdrive.setDirection(DcMotorEx.Direction.REVERSE);
-        BRdrive.setDirection(DcMotorEx.Direction.FORWARD);
+        BRdrive.setDirection(DcMotorEx.Direction.REVERSE);
+        FlywheelR.setDirection(DcMotor.Direction.REVERSE);
         /* Arm.setDirection(DcMotorSimple.Direction.REVERSE);*/
 
         FLdrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
