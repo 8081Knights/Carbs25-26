@@ -54,12 +54,12 @@ public class NewDriveTrain extends OpMode {
         else {
             hw.Intake.setPower(0);
         }
-// fly wheel fast speed, needs to be tested
+// fly wheel fast speed
         if(gamepad2.right_trigger > .5){
             hw.FlywheelL.setVelocity(hw.TPS * hw.FlywheelFast);
             hw.FlywheelR.setVelocity(hw.TPS * hw.FlywheelFast);
         }
-// fly wheel slow speed, needs to be tested
+// fly wheel slow speed
         else if(gamepad2.left_trigger > .5){
             hw.FlywheelL.setVelocity(hw.TPS * hw.FlywheelSlow);
             hw.FlywheelR.setVelocity(hw.TPS * hw.FlywheelSlow);
@@ -69,18 +69,12 @@ public class NewDriveTrain extends OpMode {
             hw.FlywheelR.setVelocity(0);
         }
 
-//0.39, 0.5,
-//        if(gamepad2.x){
-//            hw.Angler.setPosition(.58);
-//        }
-//        if(gamepad2.y){
-//            hw.Angler.setPosition(.56);
-//        }
-// fly wheel open button, needs to be tested
+//0.39, 0.5
+// fly wheel open position
         if(gamepad2.a){
             hw.Angler.setPosition(hw.AnglerOpen);
         }
-// fly wheel close button (far away), needs to be tested
+// fly wheel close position (far away)
         if(gamepad2.b){
             hw.Angler.setPosition(hw.AnglerFar);
         }
