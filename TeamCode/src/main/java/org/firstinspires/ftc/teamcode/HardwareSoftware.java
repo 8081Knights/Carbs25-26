@@ -25,19 +25,19 @@ public class HardwareSoftware {
 
 
 
-    public double openLGate = 0.39;
-    public double openRGate = 0.59;
+    public double openLGate = 0.33;
+    public double openRGate = 0.63;
     public double closeLGate = 0.56;
     //.57 to far to the right
     //.51 to far to the left
-    public double closeRGate = 0.45;
+    public double closeRGate = 0.54;
     public double AnglerOpen = 0.5;
     public double AnglerFar = 0.375;
     public double TPS = 0.6;
     public double FlapperEnter = 0.8;
-    public double FlapperStart = .55;
+    public double FlapperStart = 0.6; //.55 changed value to make it push less .60 works for auto
     public double FlywheelFast = 3300;
-    public double FlywheelSlow = 2600;
+    public double FlywheelSlow = 2500;
 
     //.69 not high enough
 
