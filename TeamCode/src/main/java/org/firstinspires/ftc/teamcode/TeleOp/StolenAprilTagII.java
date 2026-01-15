@@ -36,6 +36,7 @@ public class StolenAprilTagII extends OpMode {
     @Override
     public void init() {
 
+ //       HardwareSoftware hw = new HardwareSoftware();
         robot.init(hardwareMap);
 
         aprilTag = new AprilTagProcessor.Builder()
@@ -95,7 +96,7 @@ public class StolenAprilTagII extends OpMode {
 
     private void aimAtTag(AprilTagDetection tag) {
 
-        double yawError = -tag.ftcPose.yaw;   // degrees (its negative because the wheels are inversed)
+        double yawError = -tag.ftcPose.yaw;   // degrees (its negative because the wheels are inversed)r
 
         if (Math.abs(yawError) <= YAW_TOLERANCE_DEG) {
             stopDrive();
