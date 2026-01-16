@@ -5,10 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.HardwareSoftware;
 
+import org.firstinspires.ftc.teamcode.Subsystems.AutoAim;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Subsystems.AutoAim.*;
 
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class StolenAprilTagII extends OpMode {
     // =============================
     // Control constants
     // =============================
-    private static final double YAW_TOLERANCE_DEG = 2.0;
+    private static final double YAW_TOLERANCE_DEG = 1.0;
     private static final double TURN_KP = 0.02;
     private static final double MAX_TURN_POWER = 0.4;
 
@@ -46,9 +48,11 @@ public class StolenAprilTagII extends OpMode {
                 .build();
 
         visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .setCamera(robot.Camera)
                 .addProcessor(aprilTag)
                 .build();
+
+        AutoAim.setHardwareSoftware(robot);
 
         telemetry.addLine("AprilTag Auto-Aim Ready");
         telemetry.update();
@@ -62,23 +66,23 @@ public class StolenAprilTagII extends OpMode {
 
         if (autoAim && !detections.isEmpty()) {
 
-            AprilTagDetection targetTag = getClosestTag(detections);
+            AprilTagDetection targetTag = AutoAim.getClosestTag(detections);
 
             if (targetTag != null) {
-                aimAtTag(targetTag);
+              AutoAim.aimAtTag(targetTag);
             } else {
-                stopDrive();
+               AutoAim.stopDrive();
             }
 
         } else {
-            stopDrive();
+            AutoAim.stopDrive();
         }
 
         // =============================
         // Telemetry
         // =============================
         if (!detections.isEmpty()) {
-            AprilTagDetection tag = getClosestTag(detections);
+            AprilTagDetection tag = AutoAim.getClosestTag(detections);
             telemetry.addData("Tag ID", tag.id);
             telemetry.addData("Yaw (deg)", "%.2f", tag.ftcPose.yaw);
             telemetry.addData("Range (ft)", "%.2f", tag.ftcPose.range);
@@ -90,52 +94,5 @@ public class StolenAprilTagII extends OpMode {
         telemetry.update();
     }
 
-    // =====================================================
-    // AUTO AIM LOGIC
-    // =====================================================
 
-    private void aimAtTag(AprilTagDetection tag) {
-
-        double yawError = -tag.ftcPose.yaw;   // degrees (its negative because the wheels are inversed)r
-
-        if (Math.abs(yawError) <= YAW_TOLERANCE_DEG) {
-            stopDrive();
-            telemetry.addLine("AIM LOCKED");
-            return;
-        }
-
-        double turnPower = yawError * TURN_KP;
-        turnPower = Math.max(-MAX_TURN_POWER, Math.min(MAX_TURN_POWER, turnPower));
-
-        // Rotate in place
-        robot.FLdrive.setPower( turnPower);
-        robot.BLdrive.setPower( turnPower);
-        robot.FRdrive.setPower(-turnPower);
-        robot.BRdrive.setPower(-turnPower);
-    }
-
-    private void stopDrive() {
-        robot.FLdrive.setPower(0);
-        robot.FRdrive.setPower(0);
-        robot.BLdrive.setPower(0);
-        robot.BRdrive.setPower(0);
-    }
-
-    // =====================================================
-    // TAG SELECTION
-    // =====================================================
-
-    private AprilTagDetection getClosestTag(List<AprilTagDetection> detections) {
-
-        AprilTagDetection closest = null;
-        double minRange = Double.MAX_VALUE;
-
-        for (AprilTagDetection tag : detections) {
-            if (tag.ftcPose.range < minRange) {
-                minRange = tag.ftcPose.range;
-                closest = tag;
-            }
-        }
-        return closest;
-    }
 }

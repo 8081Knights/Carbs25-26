@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+
 public class HardwareSoftware {
 
     private HardwareMap hw = null;
@@ -23,6 +25,8 @@ public class HardwareSoftware {
     public Servo LeftGate = null;
     public Servo Flapper = null;
 
+    public WebcamName Camera = null;
+
 
 
     public double openLGate = 0.33;
@@ -37,7 +41,7 @@ public class HardwareSoftware {
     public double FlapperEnter = 0.8;
     public double FlapperStart = 0.6; //.55 changed value to make it push less .60 works for auto
     public double FlywheelFast = 3300;
-    public double FlywheelSlow = 2500;
+    public double FlywheelSlow = 2600;
 
     //.69 not high enough
 
@@ -59,6 +63,7 @@ public class HardwareSoftware {
         RightGate = hw.get(Servo.class, "RightGate");
         LeftGate = hw.get(Servo.class, "LeftGate");
         Flapper = hw.get(Servo.class, "Flapper");
+        Camera = hw.get(WebcamName.class, "Webcam 1");
 
         //   Arm = hw.get(DcMotorEx.class, "Arm");
         //    Lift = hw.get(DcMotorEx.class, "Lift");
