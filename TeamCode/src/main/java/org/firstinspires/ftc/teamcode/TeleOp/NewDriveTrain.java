@@ -5,23 +5,47 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.HardwareSoftware;
+import org.firstinspires.ftc.teamcode.Subsystems.AutoAim;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import java.util.List;
 
 @TeleOp(name="New Drive")
 public class NewDriveTrain extends OpMode {
 
     HardwareSoftware hw = new HardwareSoftware();
+
+    private VisionPortal visionPortal;
+    private AprilTagProcessor aprilTag;
+
+    double y = 0;
+    double rx = 0;
+    double shoulder_y = 0;
+    int flywheelvelocity = 1560;
+
+    double x = 0;
     @Override
     public void init() {
 
         hw.init(hardwareMap);
+
+        aprilTag = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagOutline(true)
+                .build();
+
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hw.Camera)
+                .addProcessor(aprilTag)
+                .build();
+
+        AutoAim.setHardwareSoftware(hw);
         //  hw.Wrist().setPosition(0.0);
 
     }
-    double y = 0;
-    double rx = 0;
-    double shoulder_y = 0;
-
-    double x = 0;
 
     //TODO: 1. Test direction of flywheels done done done run run we run the town
     //      2. Test intake direction done done done i dont talk but i bite full of venom
@@ -54,20 +78,48 @@ public class NewDriveTrain extends OpMode {
         else {
             hw.Intake.setPower(0);
         }
-// fly wheel fast speed
-        if(gamepad2.right_trigger > .5){
-            hw.FlywheelL.setVelocity(hw.TPS * hw.FlywheelFast);
-            hw.FlywheelR.setVelocity(hw.TPS * hw.FlywheelFast);
-        }
-// fly wheel slow speed
-        else if(gamepad2.left_trigger > .5){
-            hw.FlywheelL.setVelocity(hw.TPS * hw.FlywheelSlow);
-            hw.FlywheelR.setVelocity(hw.TPS * hw.FlywheelSlow);
-        }
-        else {
+        if(gamepad2.right_trigger > 0.5){
+            hw.FlywheelL.setVelocity(flywheelvelocity);
+            hw.FlywheelR.setVelocity(flywheelvelocity);
+        } else {
             hw.FlywheelL.setVelocity(0);
             hw.FlywheelR.setVelocity(0);
         }
+
+
+        List<AprilTagDetection> detections = aprilTag.getDetections();
+
+        boolean autoAim = gamepad2.left_trigger > 0.5;
+        if (autoAim && !detections.isEmpty()) {
+
+            AprilTagDetection targetTag = AutoAim.getClosestTag(detections);
+
+            if (targetTag != null) {
+                AutoAim.aimAtTag(targetTag);
+            } else {
+                AutoAim.stopDrive();
+            }
+
+        }
+
+
+// fly wheel fast speed
+        if(gamepad2.right_stick_y > .5){
+ //           hw.FlywheelL.setVelocity(hw.TPS * hw.FlywheelFast);
+ //           hw.FlywheelR.setVelocity(hw.TPS * hw.FlywheelFast);
+            flywheelvelocity += 1;
+        }
+        if(gamepad2.right_stick_y < -.5){
+            flywheelvelocity -= 1;
+        }
+
+        telemetry.addData("Flywheel Velocity", flywheelvelocity);
+        telemetry.addData("CurrentVR", hw.FlywheelL.getVelocity());
+        telemetry.addData("CurrentVL", hw.FlywheelR.getVelocity());
+        if (AutoAim.getClosestTag(aprilTag.getDetections()) != null){
+            telemetry.addData("Range (ft)", "%.2f", AutoAim.getClosestTag(aprilTag.getDetections()).ftcPose.range);
+        }
+        telemetry.update();
 
 //0.39, 0.5
 // fly wheel open position
