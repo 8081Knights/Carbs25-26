@@ -13,7 +13,7 @@ import java.util.List;
 public class AutoAim {
     private static VisionPortal visionPortal;
     private static AprilTagProcessor aprilTag;
-    private static final double YAW_TOLERANCE_DEG = 1.0;
+    private static final double YAW_TOLERANCE_DEG = 1.5;
     private static final double TURN_KP = 0.02;
     private static final double MAX_TURN_POWER = 0.4;
 
@@ -59,11 +59,14 @@ public class AutoAim {
 
         AprilTagDetection closest = null;
         double minRange = Double.MAX_VALUE;
-
-        for (AprilTagDetection tag : detections) {
-            if (tag.ftcPose.range < minRange) {
-                minRange = tag.ftcPose.range;
-                closest = tag;
+        if(!detections.isEmpty()) {
+            for (AprilTagDetection tag : detections) {
+                if(tag != null) {
+                    if (tag.ftcPose.range < minRange) {
+                        minRange = tag.ftcPose.range;
+                        closest = tag;
+                    }
+                }
             }
         }
         return closest;

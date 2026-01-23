@@ -62,9 +62,9 @@ import org.firstinspires.ftc.teamcode.HardwareSoftware;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="hw: OldAutoBlueGoal", group="hw")
+@Autonomous(name="hw: CloseAutoBlueGoal", group="hw")
 
-public class AutoBlueGoal extends LinearOpMode {
+public class CloseAutoBlueGoal extends LinearOpMode {
     //  HardwareSoftware hw = new HardwareSoftware();
 
     /* Declare OpMode members. */
@@ -108,109 +108,94 @@ public class AutoBlueGoal extends LinearOpMode {
 
         encoderDrive(DRIVE_SPEED,  47,  47, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
-
         // Flappers push into fly wheel
         hw.Flapper.setPosition(hw.FlapperStart);
         sleep(700);
         // Ball 1 Launch
         hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(800);
+        sleep(300);
         hw.Flapper.setPosition(hw.FlapperEnter);
-        // Ball 2 going through gate
-        hw.LeftGate.setPosition(hw.openLGate);
-        sleep(800);
+        // Ball 2 Entering Fly wheel
         hw.Intake.setPower(-.97);
-        sleep(1170);
-        hw.LeftGate.setPosition(hw.closeLGate);
+        sleep(500);
         hw.Intake.setPower(0);
-        sleep(200);
-        // Flappers push into fly wheel
         hw.Flapper.setPosition(hw.FlapperStart);
-        sleep(800);
+        sleep(700);
         // Ball 2 Launch
         hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(800);
+        sleep(300);
         hw.Flapper.setPosition(hw.FlapperEnter);
-        // Ball 3 going through gate
-        hw.RightGate.setPosition(hw.openRGate);
-        sleep(500);
+        // Ball 3 Entering Fly Wheel
         hw.Intake.setPower(-.97);
-        sleep(800);
-        hw.RightGate.setPosition(hw.closeRGate);
-        sleep(800);
-        // Flappers push into fly wheel
+        sleep(500);
         hw.Flapper.setPosition(hw.FlapperStart);
-        sleep(800);
+        sleep(700);
         // Ball 3 Launch
         hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(1000);
+        sleep(300);
         hw.Flapper.setPosition(hw.FlapperEnter);
         // Robot Sleep
-        sleep(1000);
+        sleep(300);
         hw.Intake.setPower(0);
         hw.FlywheelL.setVelocity(0);
         hw.FlywheelR.setVelocity(0);
-        // Skeleton for the next 3 balls (not tested)
-        encoderDrive(DRIVE_SPEED, driveRight(16), 4.0);
-        encoderDrive(TURN_SPEED, 12, 0, 4.0);
+
+        // collecting next two balls
+        // old values: 26, 36
         hw.Intake.setPower(-.97);
-        hw.LeftGate.setPosition(hw.openLGate);
-        sleep(300);
-        encoderDrive(DRIVE_SPEED, 12, 12, 4.0);
-        sleep(1500);
-        hw.LeftGate.setPosition(hw.closeLGate);
-        encoderDrive(DRIVE_SPEED, 12, 12, 4.0);
+        encoderDrive(TURN_SPEED, 24.5, -24.5, 4.0);
+        encoderDrive(DRIVE_SPEED, driveForward(29),6);
+        // first ball going in
+        hw.FlywheelR.setVelocity(0);
+        hw.FlywheelL.setVelocity(0);
         sleep(500);
+        encoderDrive(DRIVE_SPEED, driveForward(9),6);
+        // second ball going in
+        sleep(350);
         hw.Intake.setPower(0);
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);
-        encoderDrive(TURN_SPEED, -12, 12, 4.0);
-        encoderDrive(DRIVE_SPEED, driveLeft(16), 4.0);
-        hw.FlywheelL.setVelocity(hw.TPS * 2600);
-        hw.FlywheelR.setVelocity(hw.TPS * 2600);
-        sleep(800);
+
+        //robot gets back to shoot position with two balls, old values: 41, 36
+        encoderDrive(TURN_SPEED, 35, -35, 3.5);
+        encoderDrive(DRIVE_SPEED, driveForward(38),4.0);
+        encoderDrive(TURN_SPEED, 15.8, -15.8, 4.0);
+        sleep(300);
+        // Flappers push into fly wheel
         hw.Flapper.setPosition(hw.FlapperStart);
         sleep(700);
         // Ball 1 Launch
         hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(800);
+        sleep(300);
         hw.Flapper.setPosition(hw.FlapperEnter);
-        // Ball 2 going through gate
-        hw.LeftGate.setPosition(hw.openLGate);
-        sleep(500);
+        // Ball 2 Entering Fly wheel
         hw.Intake.setPower(-.97);
-        sleep(1170);
-        hw.LeftGate.setPosition(hw.closeLGate);
+        sleep(500);
         hw.Intake.setPower(0);
-        sleep(200);
-        // Flappers push into fly wheel
         hw.Flapper.setPosition(hw.FlapperStart);
-        sleep(800);
+        sleep(700);
         // Ball 2 Launch
         hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(800);
+        sleep(300);
         hw.Flapper.setPosition(hw.FlapperEnter);
         // Ball 3 going through gate
-        hw.RightGate.setPosition(hw.openRGate);
-        sleep(500);
-        hw.Intake.setPower(-.97);
-        sleep(1000);
-        hw.RightGate.setPosition(hw.closeRGate);
-        sleep(800);
+        //hw.RightGate.setPosition(hw.openRGate);
+        //sleep(500);
+        //hw.Intake.setPower(-.97);
+        //sleep(800);
+        //hw.RightGate.setPosition(hw.closeRGate);
+        //sleep(800);
         // Flappers push into fly wheel
-        hw.Flapper.setPosition(hw.FlapperStart);
-        sleep(200);
-        // Ball 3 Launch, rest of code is phantom, so hid it
-//        hw.Flapper.setPosition(hw.FlapperLaunch);
-//        sleep(1000);
-//        hw.Flapper.setPosition(hw.FlapperEnter);
+        //hw.Flapper.setPosition(hw.FlapperStart);
+        //sleep(800);
+        // Ball 3 Launch
+        //hw.Flapper.setPosition(hw.FlapperLaunch);
+        //sleep(500);
+        //hw.Flapper.setPosition(hw.FlapperEnter);
+        encoderDrive(DRIVE_SPEED, driveRight(28), 5);
         // Robot Sleep
-        sleep(300);
+        sleep(1000);
         hw.Intake.setPower(0);
         hw.FlywheelL.setVelocity(0);
         hw.FlywheelR.setVelocity(0);
-        encoderDrive(DRIVE_SPEED, driveRight(50), 50);
-        //  encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

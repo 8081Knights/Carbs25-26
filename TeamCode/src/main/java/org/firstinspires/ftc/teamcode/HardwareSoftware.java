@@ -39,13 +39,13 @@ public class HardwareSoftware {
     public double AnglerFar = 0.375;
     public double TPS = 0.6;
     public double FlapperEnter = 0.8;
-    public double FlapperStart = 0.6; //.55 changed value to make it push less .60 works for auto
+    public double FlapperStart = 0.6;
     public double FlywheelFast = 3300;
     public double FlywheelSlow = 2600;
 
     //.69 not high enough
 
-    public double FlapperLaunch = 0;
+    public double FlapperLaunch = 0.1;
 
     public void init(HardwareMap ahw) {
 
@@ -96,7 +96,7 @@ public class HardwareSoftware {
         FLdrive.setDirection(DcMotorEx.Direction.REVERSE);
         FRdrive.setDirection(DcMotorEx.Direction.FORWARD);
         BLdrive.setDirection(DcMotorEx.Direction.REVERSE);
-        BRdrive.setDirection(DcMotorEx.Direction.REVERSE);
+        BRdrive.setDirection(DcMotorEx.Direction.FORWARD);
         FlywheelR.setDirection(DcMotor.Direction.REVERSE);
         /* Arm.setDirection(DcMotorSimple.Direction.REVERSE);*/
 

@@ -62,7 +62,7 @@ import org.firstinspires.ftc.teamcode.HardwareSoftware;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="hw: Brody_Auto", group="hw")
+@Autonomous(name="hw: BrodyAutoButItsReallyJustBradleysCode", group="hw")
 
 public class Brody_Auto extends LinearOpMode {
     //  HardwareSoftware hw = new HardwareSoftware();

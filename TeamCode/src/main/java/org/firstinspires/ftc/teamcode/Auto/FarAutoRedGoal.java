@@ -62,9 +62,9 @@ import org.firstinspires.ftc.teamcode.HardwareSoftware;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="hw: Auto Red Drive", group="hw")
+@Autonomous(name="hw: FarAutoRedGoal", group="hw")
 
-public class AutoRedGoal extends LinearOpMode {
+public class FarAutoRedGoal extends LinearOpMode {
     //  HardwareSoftware hw = new HardwareSoftware();
 
     /* Declare OpMode members. */
@@ -105,41 +105,31 @@ public class AutoRedGoal extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  47,  47, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
-
+        encoderDrive(DRIVE_SPEED,  -5,  -5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(TURN_SPEED, 3, -3, 4.0);
         // Flappers push into fly wheel
         hw.Flapper.setPosition(hw.FlapperStart);
         sleep(700);
         // Ball 1 Launch
         hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(800);
+        sleep(300);
         hw.Flapper.setPosition(hw.FlapperEnter);
-        // Ball 2 going through gate
-        hw.LeftGate.setPosition(hw.openLGate);
-        sleep(800);
+        // Ball 2 Entering Fly wheel
         hw.Intake.setPower(-.97);
-        sleep(1000);
-        hw.LeftGate.setPosition(hw.closeLGate);
-        sleep(800);
-        // Flappers push into fly wheel
-        hw.Flapper.setPosition(hw.FlapperStart);
-        sleep(800);
-        // Ball 2 Launch
-        hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(800);
-        hw.Flapper.setPosition(hw.FlapperEnter);
-        // Ball 3 going through gate
-        hw.RightGate.setPosition(hw.openRGate);
-        hw.Intake.setPower(0);
         sleep(500);
-        hw.Intake.setPower(-.97);
-        sleep(800);
-        hw.RightGate.setPosition(hw.closeRGate);
-        sleep(800);
-        // Flappers push into fly wheel
+        hw.Intake.setPower(0);
         hw.Flapper.setPosition(hw.FlapperStart);
-        sleep(800);
+        sleep(700);
+        // Ball 2 Launch+*
+        hw.Flapper.setPosition(hw.FlapperLaunch);
+        sleep(300);
+        hw.Flapper.setPosition(hw.FlapperEnter);
+        // Ball 3 Entering Fly Wheel
+        hw.Intake.setPower(-.97);
+        sleep(500);
+        hw.Flapper.setPosition(hw.FlapperStart);
+        sleep(700);
         // Ball 3 Launch
         hw.Flapper.setPosition(hw.FlapperLaunch);
         sleep(300);
@@ -150,50 +140,43 @@ public class AutoRedGoal extends LinearOpMode {
         hw.FlywheelL.setVelocity(0);
         hw.FlywheelR.setVelocity(0);
 
-
-        // getting the balls
-        // need help getting 2 balls into the bot consistently (physics brain required)
+        // collecting next two balls
         // old values: 26, 36
+        encoderDrive(TURN_SPEED, -3, 3, 4.0);
+        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
         hw.Intake.setPower(-.97);
-        encoderDrive(TURN_SPEED, -24.5, 24.5, 4.0);
-        hw.LeftGate.setPosition(hw.openLGate);
-        encoderDrive(DRIVE_SPEED, driveForward(29),6);
+        encoderDrive(TURN_SPEED, -25, 25, 4.0);
+        encoderDrive(DRIVE_SPEED, driveForward(35),6);
+        // first ball going in
         hw.FlywheelR.setVelocity(0);
         hw.FlywheelL.setVelocity(0);
         sleep(500);
-        hw.LeftGate.setPosition(hw.closeLGate);
-        encoderDrive(DRIVE_SPEED, driveForward(9),6);
+        encoderDrive(DRIVE_SPEED, driveForward(6),6);
+        // second ball going in
         sleep(350);
         hw.Intake.setPower(0);
 
-        //robot gets back to shoot position, old values: 41, 36
-        encoderDrive(TURN_SPEED, -35, 35, 3.5);
-        encoderDrive(DRIVE_SPEED, driveForward(38),4.0);
-        encoderDrive(TURN_SPEED, -15.8, 15.8, 4.0);
+        //robot gets back to shoot position with two balls, old values: 41, 36
+        encoderDrive(DRIVE_SPEED, driveBackward(41),4.0);
+        encoderDrive(TURN_SPEED, 28, -28, 4.0);
+        encoderDrive(DRIVE_SPEED, driveBackward(4),4.0);
         sleep(300);
+        // Flappers push into fly wheel
         hw.Flapper.setPosition(hw.FlapperStart);
-        sleep(300);
-        // launch ball (maybe depending on how many are picked up)
+        sleep(700);
+        // Ball 1 Launch
         hw.Flapper.setPosition(hw.FlapperLaunch);
         sleep(300);
         hw.Flapper.setPosition(hw.FlapperEnter);
-        // Ball 2 going through gate
-        hw.LeftGate.setPosition(hw.openLGate);
-        hw.RightGate.setPosition(hw.openRGate);
-        sleep(200);
+        // Ball 2 Entering Fly wheel
         hw.Intake.setPower(-.97);
-        // old value: 1170
-        sleep(1250);
-        hw.LeftGate.setPosition(hw.closeLGate);
-        hw.RightGate.setPosition(hw.closeRGate);
-        hw.Intake.setPower(0);
-        sleep(800);
-        // Flappers push into fly wheel
-        hw.Flapper.setPosition(hw.FlapperStart);
         sleep(500);
+        hw.Intake.setPower(0);
+        hw.Flapper.setPosition(hw.FlapperStart);
+        sleep(700);
         // Ball 2 Launch
         hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(500);
+        sleep(300);
         hw.Flapper.setPosition(hw.FlapperEnter);
         // Ball 3 going through gate
         //hw.RightGate.setPosition(hw.openRGate);
@@ -209,7 +192,7 @@ public class AutoRedGoal extends LinearOpMode {
         //hw.Flapper.setPosition(hw.FlapperLaunch);
         //sleep(500);
         //hw.Flapper.setPosition(hw.FlapperEnter);
-        encoderDrive(DRIVE_SPEED, driveRight(28), 5);
+        encoderDrive(DRIVE_SPEED, driveLeft(5), 5);
         // Robot Sleep
         sleep(1000);
         hw.Intake.setPower(0);
@@ -237,7 +220,14 @@ public class AutoRedGoal extends LinearOpMode {
 
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
-
+            hw.LeftGate.setPosition(hw.closeLGate);
+            hw.RightGate.setPosition(hw.closeRGate);
+            // angling launcher and turn it on
+            hw.Angler.setPosition(hw.AnglerFar);
+            // Start Fly Wheels
+            hw.FlywheelL.setVelocity(hw.TPS * 2600);
+            hw.FlywheelR.setVelocity(hw.TPS * 2600);
+            sleep(800);
             // Determine new target position, and pass to motor controller
             newLeftTarget = hw.FLdrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             newLeftTarget = hw.BLdrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
