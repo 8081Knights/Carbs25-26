@@ -78,7 +78,7 @@ public class NewDriveTrain extends OpMode {
 
         // ---------- FLYWHEEL ----------
         if(gamepad2.right_trigger > 0.5){
-            AprilTagDetection tag = AutoAim.getClosestTag(aprilTag.getDetections());
+            AprilTagDetection tag = AutoAim.getCorrectTag(aprilTag.getDetections(), 20);
             if(tag != null) {
                 hw.FlywheelL.setVelocity(getVelocity(tag.ftcPose.range));
                 hw.FlywheelR.setVelocity(getVelocity(tag.ftcPose.range));
@@ -93,7 +93,7 @@ public class NewDriveTrain extends OpMode {
         boolean autoAim = gamepad2.left_trigger > 0.5;
 
         if (autoAim && !detections.isEmpty()) {
-            AprilTagDetection targetTag = AutoAim.getClosestTag(detections);
+            AprilTagDetection targetTag = AutoAim.getCorrectTag(detections, 20);
             if (targetTag != null) {
                 AutoAim.aimAtTag(targetTag);
             } else {
@@ -131,8 +131,8 @@ public class NewDriveTrain extends OpMode {
         telemetry.addData("CurrentVL", hw.FlywheelL.getVelocity());
         telemetry.addData("CurrentVR", hw.FlywheelR.getVelocity());
         telemetry.addData("Flapper State", flapperState);
-        if(AutoAim.getClosestTag(detections) != null) {
-            telemetry.addData("Range", AutoAim.getClosestTag(detections).ftcPose.range);
+        if(AutoAim.getCorrectTag(detections, 20) != null) {
+            telemetry.addData("Range", AutoAim.getCorrectTag(detections, 20).ftcPose.range);
         }
         telemetry.update();
     }

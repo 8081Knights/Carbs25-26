@@ -98,6 +98,7 @@ public class HardwareSoftware {
         BLdrive.setDirection(DcMotorEx.Direction.REVERSE);
         BRdrive.setDirection(DcMotorEx.Direction.FORWARD);
         FlywheelR.setDirection(DcMotor.Direction.REVERSE);
+        Intake.setDirection(DcMotor.Direction.REVERSE);
         /* Arm.setDirection(DcMotorSimple.Direction.REVERSE);*/
 
         FLdrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

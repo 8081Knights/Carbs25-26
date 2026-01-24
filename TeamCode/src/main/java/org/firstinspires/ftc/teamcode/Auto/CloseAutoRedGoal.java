@@ -105,9 +105,8 @@ public class CloseAutoRedGoal extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        hw.Angler.setPosition(hw.AnglerFar);
         encoderDrive(DRIVE_SPEED,  47,  47, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-
-
         // Flappers push into fly wheel
         hw.Flapper.setPosition(hw.FlapperStart);
         sleep(700);

@@ -66,7 +66,7 @@ public class StolenAprilTagII extends OpMode {
 
         if (autoAim && !detections.isEmpty()) {
 
-            AprilTagDetection targetTag = AutoAim.getClosestTag(detections);
+            AprilTagDetection targetTag = AutoAim.getCorrectTag(detections, 20);
 
             if (targetTag != null) {
               AutoAim.aimAtTag(targetTag);
@@ -82,7 +82,7 @@ public class StolenAprilTagII extends OpMode {
         // Telemetry
         // =============================
         if (!detections.isEmpty()) {
-            AprilTagDetection tag = AutoAim.getClosestTag(detections);
+            AprilTagDetection tag = AutoAim.getCorrectTag(detections, 20);
             telemetry.addData("Tag ID", tag.id);
             telemetry.addData("Yaw (deg)", "%.2f", tag.ftcPose.yaw);
             telemetry.addData("Range (ft)", "%.2f", tag.ftcPose.range);

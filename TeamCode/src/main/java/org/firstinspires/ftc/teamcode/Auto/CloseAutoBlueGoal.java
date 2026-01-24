@@ -35,6 +35,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwareSoftware;
+import org.firstinspires.ftc.teamcode.Subsystems.AutoAim;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import java.util.List;
 
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
@@ -75,6 +81,7 @@ public class CloseAutoBlueGoal extends LinearOpMode {
 
     private ElapsedTime     runtime = new ElapsedTime();
 
+
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
     // For external drive gearing, set DRIVE_GEAR_REDUCTION as needed.
@@ -85,12 +92,36 @@ public class CloseAutoBlueGoal extends LinearOpMode {
 
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+
+    static final double     SLOW_DRIVE_SPEED        = 0.5;
+    private VisionPortal visionPortal;
+    private AprilTagProcessor aprilTag;
+    public double getVelocity(double distance) {
+        return -0.000357528 * Math.pow(distance, 3)
+                + 0.127712 * Math.pow(distance, 2)
+                - 11.52989 * distance
+                + 1860.2731;
+    }
+
     HardwareSoftware hw = new HardwareSoftware();
     @Override
     public void runOpMode() {
 
+
+
         // Initialize the drive system variables.
         hw.init(hardwareMap);
+
+        aprilTag = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagOutline(true)
+                .build();
+
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hw.Camera)
+                .addProcessor(aprilTag)
+                .build();
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at",  "%7d :%7d",
@@ -99,82 +130,104 @@ public class CloseAutoBlueGoal extends LinearOpMode {
                 hw.FRdrive.getCurrentPosition(),
                 hw.BRdrive.getCurrentPosition());
         telemetry.update();
-
+        AutoAim.setHardwareSoftware(hw);
         // Wait for the game to start (driver presses START)
         waitForStart();
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-
-        encoderDrive(DRIVE_SPEED,  47,  47, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-
+        hw.Angler.setPosition(hw.AnglerFar);
+        encoderDrive(DRIVE_SPEED,  52,  52, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        // auto aim and fly wheel speed
+        ElapsedTime flywheelTimer = new ElapsedTime();
+        AprilTagDetection tag = AutoAim.getCorrectTag( aprilTag.getDetections(), 20);
+        if(tag != null) {
+            aimAtTagBlocking(1.0);
+            flywheelTimer.reset();
+        }
+        while (opModeIsActive() && flywheelTimer.seconds() < 1.0) {
+            spinFlywheelFromTag();
+            idle();
+        }
         // Flappers push into fly wheel
+        hw.Flapper.setPosition(hw.FlapperEnter);
+        sleep(300);
         hw.Flapper.setPosition(hw.FlapperStart);
         sleep(700);
         // Ball 1 Launch
         hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(300);
+        sleep(600);
         hw.Flapper.setPosition(hw.FlapperEnter);
+        sleep(300);
         // Ball 2 Entering Fly wheel
         hw.Intake.setPower(-.97);
-        sleep(500);
-        hw.Intake.setPower(0);
+        sleep(800);
         hw.Flapper.setPosition(hw.FlapperStart);
         sleep(700);
         // Ball 2 Launch
+        hw.Intake.setPower(0);
         hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(300);
+        sleep(600);
         hw.Flapper.setPosition(hw.FlapperEnter);
+        sleep(300);
         // Ball 3 Entering Fly Wheel
         hw.Intake.setPower(-.97);
-        sleep(500);
+        sleep(800);
         hw.Flapper.setPosition(hw.FlapperStart);
         sleep(700);
         // Ball 3 Launch
         hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(300);
+        sleep(600);
         hw.Flapper.setPosition(hw.FlapperEnter);
         // Robot Sleep
         sleep(300);
         hw.Intake.setPower(0);
-        hw.FlywheelL.setVelocity(0);
-        hw.FlywheelR.setVelocity(0);
+        stopFlywheel();
 
         // collecting next two balls
         // old values: 26, 36
         hw.Intake.setPower(-.97);
-        encoderDrive(TURN_SPEED, 24.5, -24.5, 4.0);
-        encoderDrive(DRIVE_SPEED, driveForward(29),6);
-        // first ball going in
-        hw.FlywheelR.setVelocity(0);
-        hw.FlywheelL.setVelocity(0);
-        sleep(500);
-        encoderDrive(DRIVE_SPEED, driveForward(9),6);
-        // second ball going in
-        sleep(350);
+        encoderDrive(TURN_SPEED, 25.5, -25.5, 4.0);
+        encoderDrive(SLOW_DRIVE_SPEED, driveForward(41),6);
+        // balls going in
+        sleep(1100);
         hw.Intake.setPower(0);
 
         //robot gets back to shoot position with two balls, old values: 41, 36
         encoderDrive(TURN_SPEED, 35, -35, 3.5);
-        encoderDrive(DRIVE_SPEED, driveForward(38),4.0);
-        encoderDrive(TURN_SPEED, 15.8, -15.8, 4.0);
-        sleep(300);
+        encoderDrive(DRIVE_SPEED, driveForward(40),4.0);
+        encoderDrive(TURN_SPEED, 12.5, -12.5, 4.0);
+        sleep(1150);
+        // auto aim and fly wheel speed
+        tag = AutoAim.getCorrectTag( aprilTag.getDetections(), 20);
+        if(tag != null) {
+            aimAtTagBlocking(1.0);
+            flywheelTimer.reset();
+        }
+        while (opModeIsActive() && flywheelTimer.seconds() < 1.0) {
+            spinFlywheelFromTag();
+            idle();
+        }
         // Flappers push into fly wheel
+        hw.Flapper.setPosition(hw.FlapperEnter);
+        sleep(300);
         hw.Flapper.setPosition(hw.FlapperStart);
         sleep(700);
         // Ball 1 Launch
         hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(300);
+        sleep(600);
         hw.Flapper.setPosition(hw.FlapperEnter);
+        sleep(300);
         // Ball 2 Entering Fly wheel
+        sleep(600);
         hw.Intake.setPower(-.97);
-        sleep(500);
-        hw.Intake.setPower(0);
+        sleep(800);
         hw.Flapper.setPosition(hw.FlapperStart);
         sleep(700);
         // Ball 2 Launch
+        hw.Intake.setPower(0);
         hw.Flapper.setPosition(hw.FlapperLaunch);
-        sleep(300);
+        sleep(600);
         hw.Flapper.setPosition(hw.FlapperEnter);
         // Ball 3 going through gate
         //hw.RightGate.setPosition(hw.openRGate);
@@ -194,8 +247,7 @@ public class CloseAutoBlueGoal extends LinearOpMode {
         // Robot Sleep
         sleep(1000);
         hw.Intake.setPower(0);
-        hw.FlywheelL.setVelocity(0);
-        hw.FlywheelR.setVelocity(0);
+        stopFlywheel();
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -218,14 +270,6 @@ public class CloseAutoBlueGoal extends LinearOpMode {
 
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
-              hw.LeftGate.setPosition(hw.closeLGate);
-            hw.RightGate.setPosition(hw.closeRGate);
-            // angling launcher and turn it on
-              hw.Angler.setPosition(hw.AnglerFar);
-            // Start Fly Wheels
-              hw.FlywheelL.setVelocity(hw.TPS * 2600);
-               hw.FlywheelR.setVelocity(hw.TPS * 2600);
-            sleep(800);
             // Determine new target position, and pass to motor controller
             newLeftTarget = hw.FLdrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             newLeftTarget = hw.BLdrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
@@ -379,4 +423,46 @@ public class CloseAutoBlueGoal extends LinearOpMode {
     public double[] turnLeft(double inches) {
         return new double[]{-inches, inches, inches, -inches};
     }
+    public void spinFlywheelFromTag() {
+        AprilTagDetection tag = AutoAim.getCorrectTag(aprilTag.getDetections(),20 );
+
+        if (tag != null) {
+            double velocity = getVelocity(tag.ftcPose.range);
+            hw.FlywheelL.setVelocity(velocity);
+            hw.FlywheelR.setVelocity(velocity);
+        }
+    }
+
+    public void stopFlywheel() {
+        hw.FlywheelL.setVelocity(0);
+        hw.FlywheelR.setVelocity(0);
+    }
+
+    public void aimAtTagBlocking(double timeoutSeconds) {
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+
+        while (opModeIsActive() && timer.seconds() < timeoutSeconds) {
+
+            List<AprilTagDetection> detections = aprilTag.getDetections();
+
+            if (!detections.isEmpty()) {
+                AprilTagDetection targetTag = AutoAim.getCorrectTag(detections,  20);
+
+                if (targetTag != null) {
+                    AutoAim.aimAtTag(targetTag);
+
+                    if (Math.abs(targetTag.ftcPose.yaw) < 1.5) {
+                        AutoAim.stopDrive();
+                        return;
+                    }
+                }
+            }
+
+            idle();
+        }
+
+        AutoAim.stopDrive();
+    }
 }
+

@@ -105,7 +105,7 @@ public class FarAutoRedGoal extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-
+        hw.Angler.setPosition(hw.AnglerFar);
         encoderDrive(DRIVE_SPEED,  -5,  -5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         encoderDrive(TURN_SPEED, 3, -3, 4.0);
         // Flappers push into fly wheel
@@ -220,14 +220,6 @@ public class FarAutoRedGoal extends LinearOpMode {
 
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
-            hw.LeftGate.setPosition(hw.closeLGate);
-            hw.RightGate.setPosition(hw.closeRGate);
-            // angling launcher and turn it on
-            hw.Angler.setPosition(hw.AnglerFar);
-            // Start Fly Wheels
-            hw.FlywheelL.setVelocity(hw.TPS * 2600);
-            hw.FlywheelR.setVelocity(hw.TPS * 2600);
-            sleep(800);
             // Determine new target position, and pass to motor controller
             newLeftTarget = hw.FLdrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             newLeftTarget = hw.BLdrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
